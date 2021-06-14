@@ -1,11 +1,11 @@
 {
-  "name": "@paciolan/remote-component-starter",
+  "name": "hello-world-component",
   "version": "1.0.0-semantic-versioning",
-  "description": "Remote Component Starter",
+  "description": "Hello World component for remote resource loading experiment",
   "private": true,
   "browser": "dist/main.js",
-  "author": "Paciolan",
-  "license": "MIT",
+  "author": "Sonia Chronowska",
+  "license": "UNLICENSED",
   "scripts": {
     "build": "npm run clean && cross-env NODE_ENV=production webpack --mode production",
     "build:dev": "npm run clean && cross-env NODE_ENV=development webpack --mode development",
