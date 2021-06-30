@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Title } from "./components/Title";
+
 export const App = props => {
   const { agent, components } = props;
   const { Table, TableBody, TableCell, TableContainer, TableRow } = components;
