@@ -4,7 +4,14 @@ import { Title } from "./components/Title";
 
 export const App = props => {
   const { agent, components } = props;
-  const { Table, TableBody, TableCell, TableContainer, TableRow } = components;
+  const {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
+    TableHead
+  } = components;
 
   return (
     <div>
