@@ -25,7 +25,7 @@ export const App = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.entries.map(([key, value]) => (
+            {Object.entries(props).map(([key, value]) => (
               <TableRow key={key}>
                 <TableCell>key</TableCell>
                 <TableCell>{JSON.stringify(value)}</TableCell>
