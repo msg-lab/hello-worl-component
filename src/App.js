@@ -1,6 +1,7 @@
 import React from "react";
 
 import Navigation from "./components/Navigation";
+import Pages from "./components/Pages/Pages";
 
 export const App = props => {
   const {
@@ -26,7 +27,7 @@ export const App = props => {
         icons={icons}
       />
       <ControlArea standardBody={false} containerStyles={{ height: "unset" }}>
-        Test
+        <Pages pageBaseUrl={pageBaseUrl} utils={utils} />
       </ControlArea>
     </Settings>
   );
