@@ -15,7 +15,7 @@ const Navigation = ({
   const { AddButton, Link, PageNav } = components;
   const { PersonIcon, PeopleAltIcon } = icons;
 
-  const isPrivate = obj => obj.agent_id == agent.id && !obj.group;
+  const isPrivate = obj => obj.agentId == agent.id && !obj.group;
 
   const privateCategories = data.cannedReplyCategories.filter(isPrivate);
   const privateCannedReplies = data.cannedReplies.filter(isPrivate);

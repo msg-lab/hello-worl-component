@@ -3,3 +3,6 @@ export const categoryCannedReplies = (category, { cannedReplies }) =>
 
 export const categoryCannedRepliesCount = (...args) =>
   categoryCannedReplies(...args).length;
+
+export const relativePath = (pageBaseUrl, asPath) =>
+  `${asPath}/`.replace(new RegExp(`^${pageBaseUrl}`), "/");
