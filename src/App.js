@@ -29,6 +29,7 @@ export const App = props => {
         pageRoute={pageRoute}
         data={data}
         agent={agent}
+        groups={groups}
         utils={utils}
         components={components}
         icons={icons}

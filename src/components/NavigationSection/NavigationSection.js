@@ -7,8 +7,8 @@ const NavigationSection = ({
   pageBaseUrl,
   pageRoute,
   name,
-  categories,
-  cannedReplies,
+  categories = [],
+  cannedReplies = [],
   groupId,
   isGlobal,
   isPrivate,
@@ -24,8 +24,7 @@ const NavigationSection = ({
       fontSize: "1em !important"
     },
     divider: {
-      marginTop: 10,
-      marginBottom: 10
+      display: "none"
     }
   }));
 
@@ -41,6 +40,8 @@ const NavigationSection = ({
   const EndIcon = () => (
     <span className={classes.count}>{rootCannedRepliesCount}</span>
   );
+
+  if (!categories.length && !cannedReplies.length) return null;
 
   return (
     <SubSection
