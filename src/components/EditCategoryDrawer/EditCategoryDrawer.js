@@ -86,8 +86,6 @@ const EditCategoryDrawer = ({
 
   const isOpen = isNew || isEdit;
 
-  console.log({ successMessage });
-
   const groupOptions = prepareGroupOptions({ data, agent, groups });
 
   const serializeFormData = ({ name, group, sharing }) => {
