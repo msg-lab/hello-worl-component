@@ -31,9 +31,12 @@ const Navigation = ({
         Private
       </Separator>
       <NavigationSection
+        pageBaseUrl={pageBaseUrl}
+        pageRoute={pageRoute}
         name="Private"
         categories={privateCategories}
         cannedReplies={privateCannedReplies}
+        isPrivate
         utils={utils}
         components={components}
         icons={icons}

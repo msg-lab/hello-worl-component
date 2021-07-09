@@ -1,6 +1,8 @@
 import React from "react";
 
 const NavigationSubsection = ({
+  pageBaseUrl,
+  pageRoute,
   id,
   name,
   count,
@@ -8,7 +10,7 @@ const NavigationSubsection = ({
   components,
   icons
 }) => {
-  const { makeStyles } = utils;
+  const { makeStyles, useRouter } = utils;
   const { SubSectionItem } = components;
   const { FolderOpenIcon } = icons;
 
@@ -25,12 +27,19 @@ const NavigationSubsection = ({
 
   const classes = useStyles();
 
+  const router = useRouter();
+
   const EndIcon = () => <span className={classes.count}>{count}</span>;
 
   return (
     <SubSectionItem
       className={classes.root}
       item={{ id, name }}
+      onClick={() => {
+        router.push(pageRoute, `${pageBaseUrl}category/${id}`, {
+          shallow: true
+        });
+      }}
       Icon={FolderOpenIcon}
       EndIcon={EndIcon}
     />

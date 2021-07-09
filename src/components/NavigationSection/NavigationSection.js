@@ -4,14 +4,19 @@ import NavigationSubsection from "../NavigationSubsection";
 import * as selectors from "../../utils/selectors";
 
 const NavigationSection = ({
+  pageBaseUrl,
+  pageRoute,
   name,
   categories,
   cannedReplies,
+  groupId,
+  isGlobal,
+  isPrivate,
   utils,
   components,
   icons
 }) => {
-  const { makeStyles } = utils;
+  const { makeStyles, useRouter } = utils;
   const { SubSection } = components;
 
   const useStyles = makeStyles(() => ({
@@ -25,6 +30,8 @@ const NavigationSection = ({
   }));
 
   const classes = useStyles();
+
+  const router = useRouter();
 
   const rootCannedRepliesCount = selectors.categoryCannedRepliesCount(
     undefined,
@@ -40,11 +47,30 @@ const NavigationSection = ({
       dividerClassName={classes.divider}
       name={name}
       isOpen
+      onClick={() => {
+        if (isGlobal) {
+          return router.push(pageRoute, `${pageBaseUrl}global`, {
+            shallow: true
+          });
+        }
+
+        if (isPrivate) {
+          return router.push(pageRoute, `${pageBaseUrl}private`, {
+            shallow: true
+          });
+        }
+
+        return router.push(pageRoute, `${pageBaseUrl}${groupId}`, {
+          shallow: true
+        });
+      }}
       EndIcon={EndIcon}
     >
       {categories.map(category => (
         <NavigationSubsection
           key={category.id}
+          pageBaseUrl={pageBaseUrl}
+          pageRoute={pageRoute}
           id={category.id}
           name={category.name}
           count={selectors.categoryCannedRepliesCount(category, {
