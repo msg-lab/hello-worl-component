@@ -60,7 +60,7 @@ const NavigationSection = ({
           });
         }
 
-        return router.push(pageRoute, `${pageBaseUrl}${groupId}`, {
+        return router.push(pageRoute, `${pageBaseUrl}group/${groupId}`, {
           shallow: true
         });
       }}

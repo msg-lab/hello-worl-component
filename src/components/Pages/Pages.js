@@ -11,7 +11,10 @@ const Pages = ({ pageBaseUrl, utils }) => {
   return (
     <Router>
       <Switch location={{ pathname: path }}>
-        <Route path="/category/new">New category</Route>
+        <Route path="/private">Private listing</Route>
+        <Route path="/global">Global listing</Route>
+        <Route path="/group/:id">Group listing</Route>
+        <Route path="/category/:id">Category listing</Route>
       </Switch>
     </Router>
   );
