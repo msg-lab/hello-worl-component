@@ -1,7 +1,19 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-const Pages = ({ pageBaseUrl, utils }) => {
+import CannedRepliesPage from "../CannedRepliesPage";
+
+const Pages = ({
+  pageBaseUrl,
+  pageRoute,
+  data,
+  agent,
+  groups,
+  cannedRepliesMapping,
+  utils,
+  components,
+  icons
+}) => {
   const { useRouter } = utils;
 
   const router = useRouter();
@@ -11,10 +23,76 @@ const Pages = ({ pageBaseUrl, utils }) => {
   return (
     <Router>
       <Switch location={{ pathname: path }}>
-        <Route path="/private">Private listing</Route>
-        <Route path="/global">Global listing</Route>
-        <Route path="/group/:id">Group listing</Route>
-        <Route path="/category/:id">Category listing</Route>
+        <Route
+          path="/private"
+          render={() => (
+            <CannedRepliesPage
+              pageBaseUrl={pageBaseUrl}
+              pageRoute={pageRoute}
+              isPrivate
+              data={data}
+              agent={agent}
+              groups={groups}
+              cannedReplies={cannedRepliesMapping.private}
+              utils={utils}
+              components={components}
+              icons={icons}
+            />
+          )}
+        />
+        <Route
+          path="/global"
+          render={() => (
+            <CannedRepliesPage
+              pageBaseUrl={pageBaseUrl}
+              pageRoute={pageRoute}
+              isGlobal
+              data={data}
+              agent={agent}
+              groups={groups}
+              cannedReplies={cannedRepliesMapping.global}
+              utils={utils}
+              components={components}
+              icons={icons}
+            />
+          )}
+        />
+        <Route
+          path="/group/:groupId"
+          render={({ match }) => (
+            <CannedRepliesPage
+              pageBaseUrl={pageBaseUrl}
+              pageRoute={pageRoute}
+              groupId={Number(match.params.groupId)}
+              data={data}
+              agent={agent}
+              groups={groups}
+              cannedReplies={cannedRepliesMapping.group[match.params.groupId]}
+              utils={utils}
+              components={components}
+              icons={icons}
+            />
+          )}
+        />
+        <Route
+          path="/category/:categoryId"
+          render={({ match }) => (
+            <CannedRepliesPage
+              pageBaseUrl={pageBaseUrl}
+              pageRoute={pageRoute}
+              categoryId={Number(match.params.categoryId)}
+              data={data}
+              agent={agent}
+              groups={groups}
+              cannedReplies={
+                cannedRepliesMapping.category[match.params.categoryId]
+              }
+              utils={utils}
+              components={components}
+              icons={icons}
+            />
+          )}
+        />
       </Switch>
     </Router>
   );

@@ -1,6 +1,7 @@
 import React from "react";
 
 import NavigationSubsection from "../NavigationSubsection";
+
 import * as selectors from "../../utils/selectors";
 
 const NavigationSection = ({
@@ -9,6 +10,7 @@ const NavigationSection = ({
   name,
   categories = [],
   cannedReplies = [],
+  cannedRepliesMapping,
   groupId,
   isGlobal,
   isPrivate,
@@ -32,16 +34,20 @@ const NavigationSection = ({
 
   const router = useRouter();
 
-  const rootCannedRepliesCount = selectors.categoryCannedRepliesCount(
-    undefined,
-    { cannedReplies }
-  );
+  if (!cannedRepliesMapping && !categories.length && !cannedReplies.length) {
+    return null;
+  }
 
   const EndIcon = () => (
-    <span className={classes.count}>{rootCannedRepliesCount}</span>
+    <span className={classes.count}>{cannedReplies.length}</span>
   );
 
-  if (!categories.length && !cannedReplies.length) return null;
+  const cannedRepliesUrl = selectors.cannedRepliesUrl({
+    pageBaseUrl,
+    isGlobal,
+    isPrivate,
+    groupId
+  });
 
   return (
     <SubSection
@@ -49,19 +55,7 @@ const NavigationSection = ({
       name={name}
       isOpen
       onClick={() => {
-        if (isGlobal) {
-          return router.push(pageRoute, `${pageBaseUrl}global`, {
-            shallow: true
-          });
-        }
-
-        if (isPrivate) {
-          return router.push(pageRoute, `${pageBaseUrl}private`, {
-            shallow: true
-          });
-        }
-
-        return router.push(pageRoute, `${pageBaseUrl}group/${groupId}`, {
+        router.push(cannedRepliesUrl, cannedRepliesUrl, {
           shallow: true
         });
       }}
@@ -74,8 +68,8 @@ const NavigationSection = ({
           pageRoute={pageRoute}
           id={category.id}
           name={category.name}
-          count={selectors.categoryCannedRepliesCount(category, {
-            cannedReplies
+          count={selectors.countCategoryCannedReplies(category.id, {
+            cannedRepliesMapping
           })}
           utils={utils}
           components={components}

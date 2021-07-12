@@ -1,5 +1,7 @@
 import React from "react";
 
+import * as selectors from "../../utils/selectors";
+
 const NavigationSubsection = ({
   pageBaseUrl,
   pageRoute,
@@ -31,12 +33,17 @@ const NavigationSubsection = ({
 
   const EndIcon = () => <span className={classes.count}>{count}</span>;
 
+  const cannedRepliesUrl = selectors.cannedRepliesUrl({
+    pageBaseUrl,
+    categoryId: id
+  });
+
   return (
     <SubSectionItem
       className={classes.root}
       item={{ id, name }}
       onClick={() => {
-        router.push(pageRoute, `${pageBaseUrl}category/${id}`, {
+        router.push(pageRoute, cannedRepliesUrl, {
           shallow: true
         });
       }}

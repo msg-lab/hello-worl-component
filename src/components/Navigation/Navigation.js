@@ -3,47 +3,20 @@ import React from "react";
 import NavigationSection from "../NavigationSection";
 import Separator from "../Separator";
 
-const mapData = (input, agent, lodash) => {
-  const groupInput = lodash.groupBy(input, "groupId");
-  const agentInput = lodash.groupBy(groupInput[null], "agentId");
-  return lodash.pickBy(
-    {
-      ...groupInput,
-      private: agentInput[agent.id],
-      global: agentInput[null]
-    },
-    (value, key) => key !== "null"
-  );
-};
-
 const Navigation = ({
   pageBaseUrl,
   pageRoute,
-  data,
-  agent,
-  groups,
+  categoriesMapping,
+  cannedRepliesMapping,
+  groupIds,
+  groupMapping,
   utils,
   components,
   icons
 }) => {
-  const { lodash, makeStyles } = utils;
+  const { makeStyles } = utils;
   const { AddButton, Divider, Link, PageNav } = components;
   const { PersonIcon, PeopleAltIcon } = icons;
-
-  const categoriesMapping = mapData(data.cannedReplyCategories, agent, lodash);
-  const cannedRepliesMapping = mapData(data.cannedReplies, agent, lodash);
-  const groupIds = lodash.without(
-    lodash.union(
-      Object.keys(categoriesMapping),
-      Object.keys(cannedRepliesMapping)
-    ),
-    "global",
-    "private"
-  );
-  const groupMapping = lodash.mapValues(
-    lodash.groupBy(groups, "id"),
-    lodash.head
-  );
 
   const useStyles = makeStyles(() => ({
     divider: {
@@ -70,6 +43,7 @@ const Navigation = ({
         name="Private"
         categories={categoriesMapping.private}
         cannedReplies={cannedRepliesMapping.private}
+        cannedRepliesMapping={cannedRepliesMapping}
         isPrivate
         utils={utils}
         components={components}
@@ -85,6 +59,7 @@ const Navigation = ({
         name="Global"
         categories={categoriesMapping.global}
         cannedReplies={cannedRepliesMapping.global}
+        cannedRepliesMapping={cannedRepliesMapping}
         isGlobal
         utils={utils}
         components={components}
@@ -95,9 +70,10 @@ const Navigation = ({
           pageBaseUrl={pageBaseUrl}
           pageRoute={pageRoute}
           name={groupMapping[groupId].name}
-          categories={categoriesMapping[groupId]}
-          cannedReplies={cannedRepliesMapping[groupId]}
-          isGlobal
+          categories={categoriesMapping.group[groupId]}
+          cannedReplies={cannedRepliesMapping.group[groupId]}
+          cannedRepliesMapping={cannedRepliesMapping}
+          groupId={groupId}
           utils={utils}
           components={components}
           icons={icons}
