@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { matchPath } from "react-router-dom";
 
 import { useProvidedData } from "../../context/ProvidedData";
@@ -10,9 +10,26 @@ const sharingEnum = {
   ALL: "all"
 };
 
-const prepareDefaultFormData = ({ groupOptions }) => ({
-  name: "",
-  sharing: "self",
+const convertFromSharing = ({ sharing, group, agent }) => ({
+  groupId: sharing === sharingEnum.GROUP ? group.value : null,
+  agentId: sharing === sharingEnum.SELF ? agent.id : null
+});
+
+const convertToSharing = ({ groupId, agentId }) => {
+  if (agentId) {
+    return sharingEnum.SELF;
+  }
+
+  if (groupId) {
+    return sharingEnum.GROUP;
+  }
+
+  return sharingEnum.ALL;
+};
+
+const prepareDefaultFormData = ({ category, groupOptions }) => ({
+  name: category?.name || "",
+  sharing: category ? convertToSharing(category) : sharingEnum.SELF,
   group: groupOptions[0]
 });
 
@@ -76,28 +93,36 @@ const EditCategoryDrawer = () => {
   const { asPath } = router;
   const path = selectors.relativePath(pageBaseUrl, asPath);
 
-  const isNew = matchPath(path, {
-    path: "/category/new",
-    exact: true,
-    strict: false
-  });
-  const isEdit = matchPath(path, {
+  const isNew = Boolean(
+    matchPath(path, {
+      path: "/category/new",
+      exact: true,
+      strict: false
+    })
+  );
+  const editMatch = matchPath(path, {
     path: "/category/:id/edit",
     exact: true,
     strict: false
   });
 
+  const categoryId = editMatch?.params?.id;
+  const category =
+    categoryId && data.cannedReplyCategories.find(({ id }) => categoryId == id);
+  const isEdit = Boolean(category);
   const isOpen = isNew || isEdit;
-
-  const groupOptions = prepareGroupOptions({ data, agent, groups });
 
   const serializeFormData = ({ name, group, sharing }) => {
     return {
       cannedReplyCategories: [
         {
+          id: categoryId && Number(categoryId),
           name,
-          groupId: sharing === sharingEnum.GROUP ? group.value : null,
-          agentId: sharing === sharingEnum.SELF ? agent.id : null,
+          ...convertFromSharing({
+            sharing,
+            group,
+            agent
+          }),
           isDeleted: false
         }
       ],
@@ -105,17 +130,45 @@ const EditCategoryDrawer = () => {
     };
   };
 
+  const groupOptions = prepareGroupOptions({ data, agent, groups });
   const { control, reset, errors, handleSubmit } = useForm({
-    defaultValues: prepareDefaultFormData({ groupOptions }),
+    defaultValues: prepareDefaultFormData({
+      category,
+      groupOptions
+    }),
     reValidateMode: "onSubmit"
   });
+
+  useEffect(() => {
+    reset(
+      prepareDefaultFormData({
+        category,
+        groupOptions
+      })
+    );
+  }, [category, reset]);
 
   const handleClose = () => {
     router.back();
   };
 
-  const handleDelete = () => {
-    console.log("Deleting");
+  const handleDelete = async () => {
+    /* TODO: Add confirmation. */
+    const mutationData = {
+      cannedReplyCategories: [
+        {
+          id: categoryId && Number(categoryId),
+          name: null,
+          agentId: null,
+          groupId: null,
+          isDeleted: true
+        }
+      ],
+      cannedReplies: []
+    };
+
+    await onUpdate(mutationData);
+    router.push(pageRoute, pageBaseUrl);
   };
 
   const onSubmit = async data => {

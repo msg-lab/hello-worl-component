@@ -20,6 +20,7 @@ const CannedRepliesPage = ({
 
   const useStyles = makeStyles(theme => ({
     container: {
+      height: "40px",
       margin: "7px 0px",
       alignItems: "center",
       padding: "0px 10px",
@@ -168,7 +169,7 @@ const CannedRepliesPageContainer = ({
   const group = parentGroupId && groups.find(({ id }) => parentGroupId == id);
 
   const isCategoryPrivate = (() => {
-    if (!categoryId) {
+    if (!category) {
       return false;
     }
 
@@ -176,7 +177,7 @@ const CannedRepliesPageContainer = ({
   })();
 
   const isCategoryGlobal = (() => {
-    if (!categoryId) {
+    if (!category) {
       return false;
     }
 
