@@ -1,19 +1,22 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
+import { useProvidedData } from "../../context/ProvidedData";
 import CannedRepliesPage from "../CannedRepliesPage";
 
-const Pages = ({
-  pageBaseUrl,
-  pageRoute,
-  data,
-  agent,
-  groups,
-  cannedRepliesMapping,
-  utils,
-  components,
-  icons
-}) => {
+const Pages = () => {
+  const {
+    pageBaseUrl,
+    pageRoute,
+    data,
+    agent,
+    groups,
+    cannedRepliesMapping,
+    utils,
+    components,
+    icons
+  } = useProvidedData();
+
   const { useRouter } = utils;
 
   const router = useRouter();

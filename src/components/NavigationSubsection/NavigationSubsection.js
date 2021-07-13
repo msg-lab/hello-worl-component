@@ -1,17 +1,12 @@
 import React from "react";
 
+import { useProvidedData } from "../../context/ProvidedData/ProvidedData";
 import * as selectors from "../../utils/selectors";
 
-const NavigationSubsection = ({
-  pageBaseUrl,
-  pageRoute,
-  id,
-  name,
-  count,
-  utils,
-  components,
-  icons
-}) => {
+const NavigationSubsection = ({ id, name, count }) => {
+  const { pageBaseUrl, pageRoute, utils, components, icons } =
+    useProvidedData();
+
   const { makeStyles, useRouter } = utils;
   const { SubSectionItem } = components;
   const { FolderOpenIcon } = icons;

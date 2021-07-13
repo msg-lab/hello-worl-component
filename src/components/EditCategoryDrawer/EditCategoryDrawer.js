@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { matchPath } from "react-router-dom";
 
+import { useProvidedData } from "../../context/ProvidedData";
 import * as selectors from "../../utils/selectors";
 
 const sharingEnum = {
@@ -25,16 +26,18 @@ const prepareGroupOptions = ({ data, agent, groups }) => {
   return assigneableGroups.map(({ id, name }) => ({ value: id, label: name }));
 };
 
-const EditCategoryDrawer = ({
-  pageBaseUrl,
-  pageRoute,
-  data,
-  agent,
-  groups,
-  components,
-  utils,
-  onUpdate
-}) => {
+const EditCategoryDrawer = () => {
+  const {
+    pageBaseUrl,
+    pageRoute,
+    data,
+    agent,
+    groups,
+    components,
+    utils,
+    onUpdate
+  } = useProvidedData();
+
   const {
     Controller,
     FormBody,
@@ -46,9 +49,9 @@ const EditCategoryDrawer = ({
     RadioGroup,
     Radio,
     Section,
-    Selector,
-    Snackbar
+    Selector
   } = components;
+
   const { makeStyles, useForm, useRouter, formValidationUtils } = utils;
 
   const useStyles = makeStyles(() => ({

@@ -1,20 +1,21 @@
 import React from "react";
 
+import { useProvidedData } from "../../context/ProvidedData";
 import NavigationSection from "../NavigationSection";
 import Separator from "../Separator";
 
-const Navigation = ({
-  pageBaseUrl,
-  pageRoute,
-  categoriesMapping,
-  cannedRepliesMapping,
-  groupIds,
-  groupMapping,
-  utils,
-  components,
-  icons
-}) => {
-  const { makeStyles } = utils;
+const Navigation = () => {
+  const {
+    pageBaseUrl,
+    pageRoute,
+    categoriesMapping,
+    cannedRepliesMapping,
+    utils,
+    components,
+    icons
+  } = useProvidedData();
+
+  const { lodash, makeStyles } = utils;
   const { AddButton, Divider, Link, PageNav } = components;
   const { PersonIcon, PeopleAltIcon } = icons;
 
@@ -27,6 +28,15 @@ const Navigation = ({
 
   const classes = useStyles();
 
+  const groupIds = lodash.without(
+    lodash.union(
+      Object.keys(categoriesMapping.group),
+      Object.keys(cannedRepliesMapping.group)
+    ),
+    "global",
+    "private"
+  );
+
   return (
     <PageNav title="Canned Replies">
       <Link as={`${pageBaseUrl}category/new`} href={pageRoute}>
@@ -34,50 +44,13 @@ const Navigation = ({
           <AddButton>Create category</AddButton>
         </span>
       </Link>
-      <Separator Icon={PersonIcon} utils={utils} components={components}>
-        Private
-      </Separator>
-      <NavigationSection
-        pageBaseUrl={pageBaseUrl}
-        pageRoute={pageRoute}
-        name="Private"
-        categories={categoriesMapping.private}
-        cannedReplies={cannedRepliesMapping.private}
-        cannedRepliesMapping={cannedRepliesMapping}
-        isPrivate
-        utils={utils}
-        components={components}
-        icons={icons}
-      />
+      <Separator Icon={PersonIcon}>Private</Separator>
+      <NavigationSection isPrivate />
       <Divider className={classes.divider} />
-      <Separator Icon={PeopleAltIcon} utils={utils} components={components}>
-        Shared
-      </Separator>
-      <NavigationSection
-        pageBaseUrl={pageBaseUrl}
-        pageRoute={pageRoute}
-        name="Global"
-        categories={categoriesMapping.global}
-        cannedReplies={cannedRepliesMapping.global}
-        cannedRepliesMapping={cannedRepliesMapping}
-        isGlobal
-        utils={utils}
-        components={components}
-        icons={icons}
-      />
+      <Separator Icon={PeopleAltIcon}>Shared</Separator>
+      <NavigationSection isGlobal />
       {groupIds.map(groupId => (
-        <NavigationSection
-          pageBaseUrl={pageBaseUrl}
-          pageRoute={pageRoute}
-          name={groupMapping[groupId].name}
-          categories={categoriesMapping.group[groupId]}
-          cannedReplies={cannedRepliesMapping.group[groupId]}
-          cannedRepliesMapping={cannedRepliesMapping}
-          groupId={groupId}
-          utils={utils}
-          components={components}
-          icons={icons}
-        />
+        <NavigationSection key={groupId} groupId={groupId} />
       ))}
     </PageNav>
   );

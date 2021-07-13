@@ -1,6 +1,10 @@
 import React from "react";
 
-const Separator = ({ Icon, children, components, utils }) => {
+import { useProvidedData } from "../../context/ProvidedData/ProvidedData";
+
+const Separator = ({ Icon, children }) => {
+  const { components, utils } = useProvidedData();
+
   const { Typography } = components;
   const { makeStyles } = utils;
 

@@ -1,23 +1,19 @@
 import React from "react";
 
+import { useProvidedData } from "../../context/ProvidedData/ProvidedData";
 import * as selectors from "../../utils/selectors";
 
 const CannedRepliesPage = ({
-  pageRoute,
-  isPrivate,
-  isGlobal,
-  isEditAllowed,
   title,
   subtitle,
   addCannedReplyUrl,
   editCategoryUrl,
-  category,
-  group,
   cannedReplies,
-  utils,
-  components,
-  icons
+  isCategory,
+  isEditAllowed
 }) => {
+  const { pageRoute, utils, components, icons } = useProvidedData();
+
   const { AddButton, Grid, Link, VirtualizedDataTable } = components;
   const { makeStyles } = utils;
   const { FolderOpenIcon, SettingsIcon } = icons;
@@ -101,20 +97,24 @@ const CannedRepliesPage = ({
     <>
       <Grid container item className={classes.container} wrap="nowrap">
         <div className={classes.titleContainer}>
-          {category && <FolderOpenIcon />}
+          {isCategory && <FolderOpenIcon />}
           <div className={classes.title}>{title}</div>
           <div className={classes.subtitle}>{subtitle}</div>
-          <Link as={editCategoryUrl} href={pageRoute}>
-            <SettingsIcon />
-          </Link>
+          {isEditAllowed && (
+            <Link as={editCategoryUrl} href={pageRoute}>
+              <SettingsIcon />
+            </Link>
+          )}
         </div>
-        <Link as={addCannedReplyUrl} href={pageRoute}>
-          <span>
-            <AddButton className={classes.addButton}>
-              New canned replies
-            </AddButton>
-          </span>
-        </Link>
+        {isEditAllowed && (
+          <Link as={addCannedReplyUrl} href={pageRoute}>
+            <span>
+              <AddButton className={classes.addButton}>
+                New canned replies
+              </AddButton>
+            </span>
+          </Link>
+        )}
       </Grid>
       <VirtualizedDataTable
         data={cannedReplies}
@@ -134,20 +134,33 @@ const CannedRepliesPage = ({
 };
 
 const CannedRepliesPageContainer = ({
-  pageBaseUrl,
-  pageRoute,
   isPrivate = false,
   isGlobal = false,
   categoryId,
-  groupId,
-  data,
-  agent,
-  groups,
-  cannedReplies,
-  utils,
-  components,
-  icons
+  groupId
 }) => {
+  const { pageBaseUrl, data, agent, groups, cannedRepliesMapping } =
+    useProvidedData();
+
+  const cannedReplies =
+    (() => {
+      if (categoryId) {
+        return cannedRepliesMapping.category[categoryId];
+      }
+
+      if (groupId) {
+        return cannedRepliesMapping.group[groupId];
+      }
+
+      if (isGlobal) {
+        return cannedRepliesMapping.global;
+      }
+
+      if (isPrivate) {
+        return cannedRepliesMapping.private;
+      }
+    })() || [];
+
   const category =
     categoryId && data.cannedReplyCategories.find(({ id }) => categoryId == id);
 
@@ -218,20 +231,13 @@ const CannedRepliesPageContainer = ({
 
   return (
     <CannedRepliesPage
-      pageRoute={pageRoute}
-      isPrivate={isPrivate}
-      isGlobal={isGlobal}
-      isEditAllowed={isEditAllowed}
       title={title}
       subtitle={subtitle}
       addCannedReplyUrl={addCannedReplyUrl}
       editCategoryUrl={editCategoryUrl}
-      category={category}
-      group={group}
       cannedReplies={cannedReplies}
-      utils={utils}
-      components={components}
-      icons={icons}
+      isCategory={Boolean(categoryId)}
+      isEditAllowed={isEditAllowed}
     />
   );
 };
